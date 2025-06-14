@@ -1,0 +1,38 @@
+{
+  "en": [
+    { "id": 1, "text": "Believe in yourself!" },
+    { "id": 2, "text": "Stay positive and strong." },
+    { "id": 3, "text": "Make today count." },
+    { "id": 4, "text": "Your potential is limitless." },
+    { "id": 5, "text": "Success is a journey." },
+    { "id": 6, "text": "Never stop learning." },
+    { "id": 7, "text": "Dream big, work hard." }
+  ],
+  "pt": [
+    { "id": 1, "text": "Acredite em você!" },
+    { "id": 2, "text": "Mantenha-se positivo e forte." },
+    { "id": 3, "text": "Faça o dia de hoje valer a pena." },
+    { "id": 4, "text": "Seu potencial é ilimitado." },
+    { "id": 5, "text": "O sucesso é uma jornada." },
+    { "id": 6, "text": "Nunca pare de aprender." },
+    { "id": 7, "text": "Sonhe grande, trabalhe duro." }
+  ],
+  "fr": [
+    { "id": 1, "text": "Crois en toi!" },
+    { "id": 2, "text": "Reste positif et fort." },
+    { "id": 3, "text": "Fais que ce jour compte." },
+    { "id": 4, "text": "Ton potentiel est illimité." },
+    { "id": 5, "text": "Le succès est un voyage." },
+    { "id": 6, "text": "N'arrête jamais d'apprendre." },
+    { "id": 7, "text": "Rêve grand, travaille dur." }
+  ],
+  "es": [
+    { "id": 1, "text": "Cree en ti mismo!" },
+    { "id": 2, "text": "Mantente positivo y fuerte." },
+    { "id": 3, "text": "Haz que hoy cuente." },
+    { "id": 4, "text": "Tu potencial es ilimitado." },
+    { "id": 5, "text": "El éxito es un viaje." },
+    { "id": 6, "text": "Nunca dejes de aprender." },
+    { "id": 7, "text": "Sueña en grande, trabaja duro." }
+  ]
+}
