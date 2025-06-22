@@ -1,14 +1,14 @@
 package com.example.inspiremepolyglot.utils
 
 import android.content.Context
-import com.example.inspiremepolyglot.data.PhraseSet
+import com.example.inspiremepolyglot.data.model.PhraseList
 import com.google.gson.Gson
 import java.io.InputStreamReader
 
 object JsonUtils {
-    fun loadPhrases(context: Context): PhraseSet {
+    fun loadPhrases(context: Context): PhraseList {
         val inputStream = context.assets.open("phrases.json")
         val reader = InputStreamReader(inputStream)
-        return Gson().fromJson(reader, PhraseSet::class.java)
+        return Gson().fromJson(reader, PhraseList::class.java)
     }
 }

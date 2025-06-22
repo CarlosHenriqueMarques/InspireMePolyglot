@@ -1,0 +1,98 @@
+package com.example.inspiremepolyglot.ui.screen
+
+import android.content.Context
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.inspiremepolyglot.data.model.PhraseList
+import  com.example.inspiremepolyglot.utils.JsonUtils
+import kotlin.random.Random
+
+@Composable
+fun PhrasesScreen(context: Context) {
+    val phraseList = remember { JsonUtils.loadPhrases(context) }
+
+    val languages = listOf("English", "Portuguese", "French", "Spanish")
+
+    // ✅ Já inicia com todos os idiomas selecionados
+    val selectedLanguages = remember { mutableStateListOf(*languages.toTypedArray()) }
+
+    // ✅ Armazena o índice atual da frase
+    var currentPhraseIndex by remember { mutableStateOf(0) }
+
+    // ✅ Calcula o número máximo de frases disponíveis (mínimo entre todos os idiomas)
+    val maxIndex = remember(phraseList) {
+        phraseList?.let {
+            minOf(
+                it.english.size,
+                it.portuguese.size,
+                it.french.size,
+                it.spanish.size
+            ) - 1
+        } ?: 0
+    }
+
+    // ✅ Gera nova frase só no botão
+    fun generateNewPhraseIndex() {
+        currentPhraseIndex = (0..maxIndex).random()
+    }
+
+    // ✅ Gera a primeira frase ao iniciar
+    LaunchedEffect(Unit) {
+        generateNewPhraseIndex()
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Selecione os idiomas:", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        languages.forEach { lang ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = selectedLanguages.contains(lang),
+                    onCheckedChange = { isChecked ->
+                        if (isChecked) selectedLanguages.add(lang)
+                        else selectedLanguages.remove(lang)
+                    }
+                )
+                Text(text = lang)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { generateNewPhraseIndex() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Nova Frase")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        phraseList?.let {
+            selectedLanguages.forEach { lang ->
+                val phrase = when (lang) {
+                    "English" -> it.english.getOrNull(currentPhraseIndex)
+                    "Portuguese" -> it.portuguese.getOrNull(currentPhraseIndex)
+                    "French" -> it.french.getOrNull(currentPhraseIndex)
+                    "Spanish" -> it.spanish.getOrNull(currentPhraseIndex)
+                    else -> null
+                }
+
+                phrase?.let { safePhrase ->
+                    Text(
+                        text = "$lang: $safePhrase",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
