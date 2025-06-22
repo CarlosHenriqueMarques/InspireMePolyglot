@@ -1,28 +1,28 @@
 package com.example.inspiremepolyglot.ui.screen
 
 import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.inspiremepolyglot.data.model.PhraseList
 import  com.example.inspiremepolyglot.utils.JsonUtils
-import kotlin.random.Random
 
 @Composable
 fun PhrasesScreen(context: Context) {
     val phraseList = remember { JsonUtils.loadPhrases(context) }
-
     val languages = listOf("English", "Portuguese", "French", "Spanish")
 
-    // ✅ Já inicia com todos os idiomas selecionados
+    // ✅ Todos selecionados por padrão
     val selectedLanguages = remember { mutableStateListOf(*languages.toTypedArray()) }
 
-    // ✅ Armazena o índice atual da frase
+    // ✅ Índice da frase atual
     var currentPhraseIndex by remember { mutableStateOf(0) }
 
-    // ✅ Calcula o número máximo de frases disponíveis (mínimo entre todos os idiomas)
+    // ✅ Limite de frases (mínimo entre os idiomas)
     val maxIndex = remember(phraseList) {
         phraseList?.let {
             minOf(
@@ -34,15 +34,17 @@ fun PhrasesScreen(context: Context) {
         } ?: 0
     }
 
-    // ✅ Gera nova frase só no botão
+    // ✅ Gera nova frase
     fun generateNewPhraseIndex() {
         currentPhraseIndex = (0..maxIndex).random()
     }
 
-    // ✅ Gera a primeira frase ao iniciar
+    // ✅ Primeira frase ao iniciar
     LaunchedEffect(Unit) {
         generateNewPhraseIndex()
     }
+
+    val localContext = LocalContext.current
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Selecione os idiomas:", style = MaterialTheme.typography.titleMedium)
@@ -75,6 +77,8 @@ fun PhrasesScreen(context: Context) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val phrasesMap = mutableMapOf<String, String>()
+
         phraseList?.let {
             selectedLanguages.forEach { lang ->
                 val phrase = when (lang) {
@@ -86,6 +90,8 @@ fun PhrasesScreen(context: Context) {
                 }
 
                 phrase?.let { safePhrase ->
+                    phrasesMap[lang] = safePhrase
+
                     Text(
                         text = "$lang: $safePhrase",
                         style = MaterialTheme.typography.bodyLarge,
@@ -93,6 +99,31 @@ fun PhrasesScreen(context: Context) {
                     )
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // ✅ Botão único para compartilhar todas as frases exibidas
+        Button(
+            onClick = {
+                if (phrasesMap.isEmpty()) {
+                    Toast.makeText(localContext, "Nenhuma frase para compartilhar", Toast.LENGTH_SHORT).show()
+                } else {
+                    val message = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
+                        "$lang: $phrase"
+                    }
+
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, message)
+                    }
+
+                    localContext.startActivity(Intent.createChooser(intent, "Compartilhar via"))
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Compartilhar Frases")
         }
     }
 }
