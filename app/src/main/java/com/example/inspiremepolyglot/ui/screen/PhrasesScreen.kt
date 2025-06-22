@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import  com.example.inspiremepolyglot.utils.JsonUtils
+import com.example.inspiremepolyglot.utils.shareToInstagramStory
+import com.example.inspiremepolyglot.utils.shareToWhatsApp
 
 @Composable
 fun PhrasesScreen(context: Context) {
@@ -45,6 +47,7 @@ fun PhrasesScreen(context: Context) {
     }
 
     val localContext = LocalContext.current
+    val phrasesMap = remember { mutableStateMapOf<String, String>() }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Selecione os idiomas:", style = MaterialTheme.typography.titleMedium)
@@ -77,7 +80,7 @@ fun PhrasesScreen(context: Context) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val phrasesMap = mutableMapOf<String, String>()
+        phrasesMap.clear()
 
         phraseList?.let {
             selectedLanguages.forEach { lang ->
@@ -91,7 +94,6 @@ fun PhrasesScreen(context: Context) {
 
                 phrase?.let { safePhrase ->
                     phrasesMap[lang] = safePhrase
-
                     Text(
                         text = "$lang: $safePhrase",
                         style = MaterialTheme.typography.bodyLarge,
@@ -103,27 +105,38 @@ fun PhrasesScreen(context: Context) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ✅ Botão único para compartilhar todas as frases exibidas
+        val shareMessage = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
+            "$lang: $phrase"
+        }
+
+        // ✅ Compartilhar no WhatsApp
         Button(
             onClick = {
                 if (phrasesMap.isEmpty()) {
                     Toast.makeText(localContext, "Nenhuma frase para compartilhar", Toast.LENGTH_SHORT).show()
                 } else {
-                    val message = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
-                        "$lang: $phrase"
-                    }
-
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, message)
-                    }
-
-                    localContext.startActivity(Intent.createChooser(intent, "Compartilhar via"))
+                    shareToWhatsApp(localContext, shareMessage)
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Compartilhar Frases")
+            Text("Compartilhar no WhatsApp")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // ✅ Compartilhar no Instagram Story
+        Button(
+            onClick = {
+                if (phrasesMap.isEmpty()) {
+                    Toast.makeText(localContext, "Nenhuma frase para compartilhar", Toast.LENGTH_SHORT).show()
+                } else {
+                    shareToInstagramStory(localContext, shareMessage)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Compartilhar no Instagram Story")
         }
     }
 }
