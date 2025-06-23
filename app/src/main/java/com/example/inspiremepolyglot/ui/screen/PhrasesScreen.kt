@@ -105,17 +105,30 @@ fun PhrasesScreen(context: Context) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val shareMessage = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
+        // 🔁 Texto plano para WhatsApp
+        val shareMessageWhatsApp = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
             "$lang: $phrase"
         }
 
-        // ✅ Compartilhar no WhatsApp
+        // 🖼️ Mensagem formatada para Instagram Story
+        val emojiMap = mapOf(
+            "English" to "\uD83C\uDDFA\uD83C\uDDF8",
+            "Portuguese" to "\uD83C\uDDE7\uD83C\uDDF7",
+            "French" to "\uD83C\uDDEB\uD83C\uDDF7",
+            "Spanish" to "\uD83C\uDDEA\uD83C\uDDF8"
+        )
+
+        val shareMessageInstagram = phrasesMap.entries.joinToString("\n\n") { (lang, phrase) ->
+            "${emojiMap[lang] ?: ""} $lang\n$phrase"
+        }
+
+        // ✅ Botão: Compartilhar no WhatsApp
         Button(
             onClick = {
                 if (phrasesMap.isEmpty()) {
                     Toast.makeText(localContext, "Nenhuma frase para compartilhar", Toast.LENGTH_SHORT).show()
                 } else {
-                    shareToWhatsApp(localContext, shareMessage)
+                    shareToWhatsApp(localContext, shareMessageWhatsApp)
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -125,13 +138,13 @@ fun PhrasesScreen(context: Context) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // ✅ Compartilhar no Instagram Story
+        // ✅ Botão: Compartilhar no Instagram Story
         Button(
             onClick = {
                 if (phrasesMap.isEmpty()) {
                     Toast.makeText(localContext, "Nenhuma frase para compartilhar", Toast.LENGTH_SHORT).show()
                 } else {
-                    shareToInstagramStory(localContext, shareMessage)
+                    shareToInstagramStory(localContext, shareMessageInstagram)
                 }
             },
             modifier = Modifier.fillMaxWidth()
