@@ -1,15 +1,15 @@
 package com.example.inspiremepolyglot.ui.screen
 
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import  com.example.inspiremepolyglot.utils.JsonUtils
+import com.example.inspiremepolyglot.utils.JsonUtils
 import com.example.inspiremepolyglot.utils.shareToInstagramStory
 import com.example.inspiremepolyglot.utils.shareToWhatsApp
 
@@ -17,14 +17,9 @@ import com.example.inspiremepolyglot.utils.shareToWhatsApp
 fun PhrasesScreen(context: Context) {
     val phraseList = remember { JsonUtils.loadPhrases(context) }
     val languages = listOf("English", "Portuguese", "French", "Spanish")
-
-    // ✅ Todos selecionados por padrão
     val selectedLanguages = remember { mutableStateListOf(*languages.toTypedArray()) }
-
-    // ✅ Índice da frase atual
     var currentPhraseIndex by remember { mutableStateOf(0) }
 
-    // ✅ Limite de frases (mínimo entre os idiomas)
     val maxIndex = remember(phraseList) {
         phraseList?.let {
             minOf(
@@ -36,49 +31,63 @@ fun PhrasesScreen(context: Context) {
         } ?: 0
     }
 
-    // ✅ Gera nova frase
-    fun generateNewPhraseIndex() {
-        currentPhraseIndex = (0..maxIndex).random()
-    }
-
-    // ✅ Primeira frase ao iniciar
     LaunchedEffect(Unit) {
-        generateNewPhraseIndex()
+        currentPhraseIndex = (0..maxIndex).random()
     }
 
     val localContext = LocalContext.current
     val phrasesMap = remember { mutableStateMapOf<String, String>() }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Selecione os idiomas:", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+    ) {
+        Text(
+            text = "Selecione os idiomas:",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         languages.forEach { lang ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
             ) {
                 Checkbox(
                     checked = selectedLanguages.contains(lang),
                     onCheckedChange = { isChecked ->
                         if (isChecked) selectedLanguages.add(lang)
                         else selectedLanguages.remove(lang)
-                    }
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = MaterialTheme.colorScheme.primary
+                    )
                 )
-                Text(text = lang)
+                Text(
+                    text = lang,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = { generateNewPhraseIndex() },
-            modifier = Modifier.fillMaxWidth()
+            onClick = { currentPhraseIndex = (0..maxIndex).random() },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
-            Text("Nova Frase")
+            Text("Nova Frase", style = MaterialTheme.typography.labelLarge)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         phrasesMap.clear()
 
@@ -97,20 +106,19 @@ fun PhrasesScreen(context: Context) {
                     Text(
                         text = "$lang: $safePhrase",
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(vertical = 6.dp)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // 🔁 Texto plano para WhatsApp
         val shareMessageWhatsApp = phrasesMap.entries.joinToString("\n") { (lang, phrase) ->
             "$lang: $phrase"
         }
 
-        // 🖼️ Mensagem formatada para Instagram Story
         val emojiMap = mapOf(
             "English" to "\uD83C\uDDFA\uD83C\uDDF8",
             "Portuguese" to "\uD83C\uDDE7\uD83C\uDDF7",
@@ -122,7 +130,6 @@ fun PhrasesScreen(context: Context) {
             "${emojiMap[lang] ?: ""} $lang\n$phrase"
         }
 
-        // ✅ Botão: Compartilhar no WhatsApp
         Button(
             onClick = {
                 if (phrasesMap.isEmpty()) {
@@ -131,14 +138,15 @@ fun PhrasesScreen(context: Context) {
                     shareToWhatsApp(localContext, shareMessageWhatsApp)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            shape = MaterialTheme.shapes.medium
         ) {
             Text("Compartilhar no WhatsApp")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // ✅ Botão: Compartilhar no Instagram Story
         Button(
             onClick = {
                 if (phrasesMap.isEmpty()) {
@@ -147,7 +155,9 @@ fun PhrasesScreen(context: Context) {
                     shareToInstagramStory(localContext, shareMessageInstagram)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            shape = MaterialTheme.shapes.medium
         ) {
             Text("Compartilhar no Instagram Story")
         }
