@@ -12,13 +12,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF556B2F),         // Verde-oliva suave
+    primary = Color(0xFF556B2F),
     onPrimary = Color.White,
-    secondary = Color(0xFF8F9779),       // Verde-cinza suave
+    secondary = Color(0xFF8F9779),
     onSecondary = Color.White,
-    background = Color(0xFFE6EAE4),      // CINZA CLARO COM TOQUE VERDE (neutro e suave)
-    surface = Color(0xFFFFFFFF),         // Branco puro para cartões e superfícies
-    onSurface = Color(0xFF333333),       // Cinza escuro para texto
+    background = Color(0xFFE6EAE4),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF333333),
     error = Color(0xFFB00020),
     onError = Color.White
 )

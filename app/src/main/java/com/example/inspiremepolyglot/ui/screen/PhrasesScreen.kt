@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.example.inspiremepolyglot.utils.JsonUtils
 import com.example.inspiremepolyglot.utils.shareToInstagramStory
 import com.example.inspiremepolyglot.utils.shareToWhatsApp
+import com.example.inspiremepolyglot.ui.components.AdBanner
 
 @Composable
 fun PhrasesScreen(context: Context) {
@@ -161,5 +162,8 @@ fun PhrasesScreen(context: Context) {
         ) {
             Text("Compartilhar no Instagram Story")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        AdBanner(context = context, modifier = Modifier.fillMaxWidth())
     }
 }

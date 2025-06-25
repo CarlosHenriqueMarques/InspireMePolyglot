@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.net.Uri
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
@@ -47,7 +46,6 @@ fun shareToInstagramStory(context: Context, message: String) {
         val intent = Intent("com.instagram.share.ADD_TO_STORY").apply {
             setDataAndType(uri, "image/png")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            //putExtra("interactive_asset_uri", uri)
             `package` = "com.instagram.android"
         }
 
@@ -60,50 +58,6 @@ fun shareToInstagramStory(context: Context, message: String) {
     }
 }
 
-private fun createBitmapFromText(text: String): Bitmap {
-    val width = 1080
-    val height = 1920
-
-    // Criar o bitmap e canvas
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-
-    // Fundo com gradiente
-    val backgroundPaint = Paint()
-    val gradient = LinearGradient(
-        0f, 0f, 0f, height.toFloat(),
-        Color.parseColor("#FF8A00"),  // Laranja
-        Color.parseColor("#FF2E63"),  // Rosa
-        Shader.TileMode.CLAMP
-    )
-    backgroundPaint.shader = gradient
-    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
-
-    // Estilo do texto
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
-        textSize = 54f
-        textAlign = Paint.Align.CENTER
-        typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
-    }
-
-    val x = width / 2f
-    var y = 150f
-
-    // Renderiza cada linha, com espaço extra entre blocos de idioma
-    val lines = text.split("\n")
-    for (line in lines) {
-        if (line.isBlank()) {
-            y += paint.textSize * 1.5f  // espaço entre blocos
-        } else {
-            canvas.drawText(line, x, y, paint)
-            y += paint.textSize * 1.2f
-        }
-    }
-
-    return bitmap
-}
-
 private fun createInspiringImage(message: String): Bitmap {
     val width = 1080
     val height = 1920
@@ -111,7 +65,6 @@ private fun createInspiringImage(message: String): Bitmap {
     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
 
-    // Gradiente de fundo
     val paint = Paint()
     val gradient = LinearGradient(
         0f, 0f, 0f, height.toFloat(),
@@ -122,7 +75,6 @@ private fun createInspiringImage(message: String): Bitmap {
     paint.shader = gradient
     canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
-    // Texto centralizado, com quebras de linha e espaçamento
     val textPaint = Paint().apply {
         color = Color.WHITE
         textSize = 56f

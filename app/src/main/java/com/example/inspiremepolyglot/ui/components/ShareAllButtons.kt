@@ -7,11 +7,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.unit.dp
 
 
@@ -44,7 +41,6 @@ fun ShareButtons(sharedText: String) {
     }
 }
 
-// WhatsApp (mensagem direta)
 fun shareToWhatsApp(context: Context, message: String) {
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
@@ -58,7 +54,6 @@ fun shareToWhatsApp(context: Context, message: String) {
     }
 }
 
-// Instagram (story)
 fun shareToInstagramStory(context: Context, message: String) {
     val intent = Intent("com.instagram.share.ADD_TO_STORY").apply {
         type = "text/plain"
