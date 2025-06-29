@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- ✅ Coloque aqui, fora da tag <application> -->
+    <!-- PERMISSÕES: Fora da <application> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -17,10 +18,19 @@
         android:theme="@style/Theme.InspireMePolyglot"
         tools:targetApi="31">
 
+        <!-- 🔔 Necessário para WorkManager (para reinicializar após reinício) -->
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:replace="android:enabled,android:exported" />
+
+        <!-- AdMob ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4822152027214407~1574920010" />
 
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -32,6 +42,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Para compartilhamento com Instagram -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
