@@ -2,6 +2,7 @@ package com.example.inspiremepolyglot.ui.screen
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -44,12 +45,13 @@ fun PhrasesScreen(context: Context) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background) // ✅ adapta ao tema
             .padding(24.dp)
     ) {
         Text(
             text = "Selecione os idiomas:",
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.onBackground // ✅ visível nos dois temas
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -69,7 +71,8 @@ fun PhrasesScreen(context: Context) {
                             else selectedLanguages.remove(lang)
                         },
                         colors = CheckboxDefaults.colors(
-                            checkedColor = MaterialTheme.colorScheme.primary
+                            checkedColor = MaterialTheme.colorScheme.primary,
+                            uncheckedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     )
                     Text(
@@ -87,7 +90,10 @@ fun PhrasesScreen(context: Context) {
             onClick = { currentPhraseIndex = (0..maxIndex).random() },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text("Nova Frase", style = MaterialTheme.typography.labelLarge)
         }
@@ -146,7 +152,10 @@ fun PhrasesScreen(context: Context) {
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ),
             shape = MaterialTheme.shapes.medium
         ) {
             Text("Compartilhar no WhatsApp")
@@ -163,7 +172,10 @@ fun PhrasesScreen(context: Context) {
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             shape = MaterialTheme.shapes.medium
         ) {
             Text("Compartilhar no Instagram Story")

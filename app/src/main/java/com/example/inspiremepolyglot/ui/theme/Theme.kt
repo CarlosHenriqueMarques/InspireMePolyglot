@@ -1,8 +1,7 @@
 package com.example.inspiremepolyglot.ui.theme
 
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Shapes
@@ -11,16 +10,33 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF556B2F),
-    onPrimary = Color.White,
-    secondary = Color(0xFF8F9779),
-    onSecondary = Color.White,
-    background = Color(0xFFE6EAE4),
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF333333),
-    error = Color(0xFFB00020),
-    onError = Color.White
+    primary = md_theme_light_primary,
+    onPrimary = md_theme_light_onPrimary,
+    primaryContainer = md_theme_light_primaryContainer,
+    onPrimaryContainer = md_theme_light_onPrimaryContainer,
+    secondary = md_theme_light_secondary,
+    onSecondary = md_theme_light_onSecondary,
+    background = md_theme_light_background,
+    onBackground = md_theme_light_onBackground,
+    surface = md_theme_light_surface,
+    onSurface = md_theme_light_onSurface,
+)
+private val DarkColorScheme = darkColorScheme(
+    primary = md_theme_dark_primary,
+    onPrimary = md_theme_dark_onPrimary,
+    primaryContainer = md_theme_dark_primaryContainer,
+    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
+    secondary = md_theme_dark_secondary,
+    onSecondary = md_theme_dark_onSecondary,
+    background = md_theme_dark_background,
+    onBackground = md_theme_dark_onBackground,
+    surface = md_theme_dark_surface,
+    onSurface = md_theme_dark_onSurface,
 )
 
 private val Shapes = Shapes(
@@ -50,11 +66,14 @@ private val AppTypography = Typography(
 
 @Composable
 fun InspireMePolyglotTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val colors = if (useDarkTheme) DarkColorScheme else LightColorScheme
+
     MaterialTheme(
-        colorScheme = LightColorScheme,
-        typography = AppTypography,
+        colorScheme = colors,
+        typography = Typography,
         shapes = Shapes,
         content = content
     )
