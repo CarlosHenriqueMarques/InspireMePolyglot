@@ -13,6 +13,8 @@ import com.example.inspiremepolyglot.utils.JsonUtils
 import com.example.inspiremepolyglot.utils.shareToInstagramStory
 import com.example.inspiremepolyglot.utils.shareToWhatsApp
 import com.example.inspiremepolyglot.ui.components.AdBanner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 
 @Composable
 fun PhrasesScreen(context: Context) {
@@ -53,27 +55,29 @@ fun PhrasesScreen(context: Context) {
         Spacer(modifier = Modifier.height(12.dp))
 
         languages.forEach { lang ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Checkbox(
-                    checked = selectedLanguages.contains(lang),
-                    onCheckedChange = { isChecked ->
-                        if (isChecked) selectedLanguages.add(lang)
-                        else selectedLanguages.remove(lang)
-                    },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colorScheme.primary
+            AnimatedVisibility(visible = true) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Checkbox(
+                        checked = selectedLanguages.contains(lang),
+                        onCheckedChange = { isChecked ->
+                            if (isChecked) selectedLanguages.add(lang)
+                            else selectedLanguages.remove(lang)
+                        },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colorScheme.primary
+                        )
                     )
-                )
-                Text(
-                    text = lang,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                    Text(
+                        text = lang,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
 
@@ -104,12 +108,14 @@ fun PhrasesScreen(context: Context) {
 
                 phrase?.let { safePhrase ->
                     phrasesMap[lang] = safePhrase
-                    Text(
-                        text = "$lang: $safePhrase",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(vertical = 6.dp)
-                    )
+                    Crossfade(targetState = "$lang: $safePhrase") { animatedText ->
+                        Text(
+                            text = animatedText,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(vertical = 6.dp)
+                        )
+                    }
                 }
             }
         }
