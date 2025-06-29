@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.inspiremepolyglot"
+    namespace = "com.carlos.inspiremepolyglot"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.inspiremepolyglot"
+        applicationId = "com.carlos.inspiremepolyglot"
         minSdk = 35
         targetSdk = 35
         versionCode = 1
@@ -57,9 +57,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.google.android.gms:play-services-ads:22.1.0")
+    implementation("com.google.code.gson:gson:2.13.1")
+    implementation("com.google.android.gms:play-services-ads:24.4.0")
 
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.work:work-runtime-ktx:2.10.2")
+    implementation("androidx.core:core-ktx:1.16.0")
 }
