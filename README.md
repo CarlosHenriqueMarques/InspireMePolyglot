@@ -121,5 +121,3 @@ InspireMe Polyglot é um app que apresenta frases motivacionais em 4 idiomas (In
 Este projeto é aberto e gratuito para uso pessoal e comercial. Sinta-se livre para adaptar, melhorar e compartilhar.
 
 ---
-
-Se precisar de algo mais, me avise!
