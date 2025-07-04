@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import com.carlos.inspiremepolyglot.ui.screen.PhrasesScreen
 import com.carlos.inspiremepolyglot.ui.theme.InspireMePolyglotTheme
 import com.carlos.inspiremepolyglot.utils.NotificationWorker
+import com.google.android.gms.ads.MobileAds
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 PhrasesScreen(context = this)
             }
         }
-
+        MobileAds.initialize(this) {}
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED
@@ -34,11 +35,14 @@ class MainActivity : ComponentActivity() {
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                     1
                 )
+            } else {
+                scheduleDailyNotification()
             }
+        } else {
+            scheduleDailyNotification()
         }
-
-        scheduleDailyNotification()
     }
+
     private fun scheduleDailyNotification() {
         val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
             .build()

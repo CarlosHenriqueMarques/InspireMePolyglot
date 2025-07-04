@@ -16,13 +16,24 @@ import com.carlos.inspiremepolyglot.utils.shareToWhatsApp
 import com.carlos.inspiremepolyglot.ui.components.AdBanner
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import com.carlos.inspiremepolyglot.data.model.PhraseList
+import kotlinx.coroutines.delay
 
 @Composable
 fun PhrasesScreen(context: Context) {
-    val phraseList = remember { JsonUtils.loadPhrases(context) }
+    //val phraseList = remember { JsonUtils.loadPhrases(context) }
+    var phraseList by remember { mutableStateOf<PhraseList?>(null) }
     val languages = listOf("English", "Portuguese", "French", "Spanish")
     val selectedLanguages = remember { mutableStateListOf(*languages.toTypedArray()) }
     var currentPhraseIndex by remember { mutableStateOf(0) }
+
+
+
+    // Carrega frases de forma assíncrona (não trava UI)
+    LaunchedEffect(Unit) {
+        phraseList = JsonUtils.loadPhrases(context)
+    }
+
 
     val maxIndex = remember(phraseList) {
         phraseList?.let {
@@ -35,8 +46,15 @@ fun PhrasesScreen(context: Context) {
         } ?: 0
     }
 
-    LaunchedEffect(Unit) {
-        currentPhraseIndex = (0..maxIndex).random()
+//    LaunchedEffect(Unit) {
+//        currentPhraseIndex = (0..maxIndex).random()
+//    }
+
+    LaunchedEffect(phraseList) {
+        phraseList?.let {
+            val max = minOf(it.english.size, it.portuguese.size, it.french.size, it.spanish.size) - 1
+            currentPhraseIndex = (0..max).random()
+        }
     }
 
     val localContext = LocalContext.current
@@ -182,6 +200,17 @@ fun PhrasesScreen(context: Context) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        AdBanner(context = context, modifier = Modifier.fillMaxWidth())
+
+        var showAd by remember { mutableStateOf(false) }
+        LaunchedEffect(phraseList) {
+            if (phraseList != null) {
+                delay(500)
+                showAd = true
+            }
+        }
+
+        if (showAd) {
+            AdBanner(context = context, modifier = Modifier.fillMaxWidth())
+        }
     }
 }

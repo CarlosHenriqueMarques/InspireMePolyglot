@@ -5,16 +5,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.carlos.inspiremepolyglot.R
 
 class NotificationWorker(
     context: Context,
     workerParams: WorkerParameters
-) : Worker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val phrases = JsonUtils.loadPhrases(applicationContext)
         val index = (0 until (phrases?.english?.size ?: 1)).random()
 
@@ -28,7 +28,6 @@ class NotificationWorker(
         val channelId = "daily_phrase_channel"
         val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Criação do canal de notificação (necessário no Android 8+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
